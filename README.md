@@ -47,13 +47,20 @@ There are no risk-free profit opportunities in the market.
 The price of a European call option $(C)$ and put option $(P)$ are:
 
 $$
-C = S e^{-qT} N(d_1) - K e^{-rT} N(d_2), \\
+C = S e^{-qT} N(d_1) - K e^{-rT} N(d_2),
+$$
+
+$$
 P = K e^{-rT} N(-d_2) - S e^{-qT} N(-d_1),
 $$
 
 where:
+
 $$
-d_1 = \frac{\ln\left(\frac{S}{K}\right) + T \left(r - q + \frac{\sigma^2}{2}\right)}{\sigma \sqrt{T}}, \\
+d_1 = \frac{\ln\left(\frac{S}{K}\right) + T \left(r - q + \frac{\sigma^2}{2}\right)}{\sigma \sqrt{T}}
+$$
+
+$$
 d_2 = d_1 - \sigma \sqrt{T}.
 $$
 
@@ -91,29 +98,42 @@ $$
 
 #### Cox-Ross-Rubinstein Model (CRR)
 Under the CRR model
+
 $$
-u = e^{\sqrt{\Delta t}}, \\
+u = e^{\sqrt{\Delta t}},
+$$
+$$
 d = \frac{1}{u}.
 $$
 
 The risk-neutral probability is
+
 $$
 p = \frac{e^{\left(r - q\right) \Delta t} - d}{u - d},
 $$
+
 where $p$ is the probability of an up move, while $1 - p$ is the probability of a down move
 
 #### Jarrow-Rudd Model (JR)
 Under the JR model
+
 $$
-p = 0.5, \\
-u = \exp{\left[\left(r - q - \frac{\sigma^2}{2}\right)\Delta t + \sigma \sqrt{\Delta t}\right]}, \\
+p = 0.5
+$$
+$$
+u = \exp{\left[\left(r - q - \frac{\sigma^2}{2}\right)\Delta t + \sigma \sqrt{\Delta t}\right]},
+$$
+$$
 d = \exp{\left[\left(r - q - \frac{\sigma^2}{2}\right)\Delta t - \sigma \sqrt{\Delta t}\right]}.
 $$
 
 #### Leisen-Reimer Model (LR)
 Under the LR model
+
 $$
-u = e^{(r - q)\Delta T} \cdot \frac{p'}{p}, \\
+u = e^{(r - q)\Delta T} \cdot \frac{p'}{p},
+$$
+$$
 d = e^{(r - q)\Delta T} \cdot \frac{1 - p'}{1 - p}
 $$
 
@@ -135,14 +155,18 @@ $$
 ### 2. Greeks Calculations
 #### Delta $\left(\Delta = \frac{\partial V}{\partial S}\right)$:
 The closed-form is given by
+
 $$
-\Delta_C = e^{-qT} N(d_1), \\
+\Delta_C = e^{-qT} N(d_1),
+$$
+$$
 \Delta_P = e^{-qT} \left[N(d_1) - 1\right].
 $$
 
 Represents the sensitivity of the option price to the price of the stock.
 
 #### Gamma $\left(\Gamma = \frac{\partial^2 V}{\partial S^2}\right)$:
+
 $$
 \Gamma = \frac{e^{-qT}}{S \sigma \sqrt{T}} N'(d_1).
 $$
@@ -150,6 +174,7 @@ $$
 Represents the rate of change of Delta.
 
 #### Vega $\left(\nu = \frac{\partial V}{\partial \sigma}\right)$:
+
 $$
 \nu = S e^{-qT} N'(d_1) \sqrt{T}.
 $$
@@ -159,7 +184,9 @@ Represents the sensitivity of the option price to volatility.
 #### Theta $\left(\Theta = -\frac{\partial V}{\partial T}\right)$:
 
 $$
-\Theta_C = -\frac{S \sigma e^{-qT}}{2 \sqrt{T}} N'(d_1) - rK e^{-rT} N(d_2) + qS e^{-qT} N(d_1), \\
+\Theta_C = -\frac{S \sigma e^{-qT}}{2 \sqrt{T}} N'(d_1) - rK e^{-rT} N(d_2) + qS e^{-qT} N(d_1),
+$$
+$$
 \Theta_P = -\frac{S \sigma e^{-qT}}{2 \sqrt{T}} N'(d_1) + rK e^{-rT} N(-d_2) - qS e^{-qT} N(-d_1).
 $$
 
@@ -168,7 +195,9 @@ Represents the sensitivity of the option price to time to maturity.
 #### Rho $\left(\rho = \frac{\partial V}{\partial r}\right)$:
 
 $$
-\rho_C = KT e^{-rT} N(d_2), \\
+\rho_C = KT e^{-rT} N(d_2),
+$$
+$$
 \rho_P = KT e^{-rT} N(-d_2).
 $$
 
@@ -178,22 +207,23 @@ Represents the sensitivity of the option price to the risk-free rate of interest
 The implied volatility is the value of volatility that makes the model price match the observed market price.
 
 It solves:
+
 $$
-V_{\text{model}}(S, K, T, \sigma, r, q)
-=
-V_{\text{market}}
+V_{\text{model}}(S, K, T, \sigma, r, q) = V_{\text{market}}
 $$
 
 There is no closed-form solution for implied volatility, and so it must be computed numerically.
 
 #### Newton-Raphson Method
 The Newton-Raphson Method recursively solves for the implied volatility until the two prices are within a certain tolerance of each other. If it is unable to find a solution within the number of iterations, then it returns an error.
+
 $$
 \sigma_{n + 1} = \sigma_n - \frac{V(\sigma_n) - V_{\text{market}}}{\text{Vega}(\sigma_n)}
 $$
 
 #### Brent's Method
 Brent's method is a robust, derivative-free algorithm for solving nonlinear equations of the form:
+
 $$
 f(\sigma) = 0
 $$
@@ -201,6 +231,7 @@ $$
 The algorithm dynamically chooses the most efficient step while maintaining a bracketing interval that contains the root.
 
 The formula is:
+
 $$
 f(\sigma) = V_{\text{model}}(\sigma) - V_{\text{market}}
 $$
@@ -252,5 +283,4 @@ options_pricing_engine/
 - [Black-Scholes Formulas - macroption](https://www.macroption.com/black-scholes-formula/)
 - [Cox-Ross-Rubinstein Model Formulas - macroption](https://www.macroption.com/cox-ross-rubinstein-formulas/)
 - [Jarrow-Rudd Model Formulas - macroption](https://www.macroption.com/jarrow-rudd-formulas/)
-
 - [Leisen-Reimer Model Formulas - macroption](https://www.macroption.com/leisen-reimer-formulas/)
